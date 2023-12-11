@@ -22,3 +22,22 @@ unit_zero = do
     zero 5 5 @?= SparseMatrix 5 5 (Data.Map.fromList ([]::[((Int, Int), Int)]))
     where zz :: Int; zz = 0
 
+unit_det = do
+    let
+        lst = [[1, 0, 3], [11, 12, 8], [9, -4, 3]]
+        spar :: SparseMatrix Int
+        spar = mFromList lst
+    det lst @?= -388
+    det spar @?= det lst
+
+unit_mmul = do
+    let
+        lstL :: [[Int]]
+        lstL = [[1, 0, 3], [11, 12, 8], [9, -4, 3]]
+        lstR = reverse [[12, 0, 3], [11, 3, 8], [2, -4, 3]]
+        sparL :: SparseMatrix Int
+        sparL = mFromList lstL
+        sparR = mFromList lstR
+        correct = [[38,-4,12],[250,-8,153],[10,-48,4]]
+    multiplyMatrix lstL lstR @?= correct
+    Data.Map.filter (/= 0) (sparseMatrixElements $ multiplyMatrix sparL sparR) @?= sparseMatrixElements (mFromList correct)

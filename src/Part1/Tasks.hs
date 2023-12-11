@@ -39,7 +39,11 @@ myGCD a b =
 -- является ли дата корректной с учётом количества дней в месяце и
 -- вискокосных годов?
 isDateCorrect :: Integer -> Integer -> Integer -> Bool
-isDateCorrect = notImplementedYet
+isDateCorrect d m y =
+    and [y >= 1, m >= 1, m <= 12, d >= 1, d <= 40, d <= (monthDays !! fromInteger m)]
+  where
+    monthDays = [0, 31, 28 + (if isLeap then 1 else 0), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    isLeap = (y `mod` 4 == 0 && y `mod` 100 /= 0) || (y `mod` 400 == 0)
 
 -- возведение числа в степень, duh
 -- готовые функции и плавающую арифметику использовать нельзя
@@ -64,7 +68,12 @@ type Point2D = (Double, Double)
 -- многоугольник задан списком координат
 shapeArea :: [Point2D] -> Double
 --shapeArea points = notImplementedYet
-shapeArea = notImplementedYet
+shapeArea pts =
+    let s1 = sum $ zipWith (\a b -> fst a * snd b) pts (tail pts) in
+    let s2 = sum $ zipWith (\a b -> fst a * snd b) (tail pts) pts in
+    let hdd = head pts in
+    let lst = last pts in
+    0.5 * abs (s1 + fst lst * snd hdd - s2 - fst hdd * snd lst)
 
 -- треугольник задан длиной трёх своих сторон.
 -- функция должна вернуть
